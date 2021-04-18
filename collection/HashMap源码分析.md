@@ -55,7 +55,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>  implements Map<K,V>, Cloneab
     transient int size;
     
     /**
-     * threshols >= capacity * load factor,临界值超过之后会扩容
+     * threshols >= capacity * load_factor,临界值超过之后会扩容
      */
     int threshold;
     
@@ -68,5 +68,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>  implements Map<K,V>, Cloneab
 负载因子确定了数组的疏密程度，越接近1越密集，越接近0越疏漏
 太疏漏就会导致查找效果太差，太密集导致资源利用率不高
 0.75是给出的一个默认值，官方应该是在测试过后觉得这个值比较恰当的。
+
+数组在threshols >= capacity * load_factor,临界值超过之后会扩容
 
 
