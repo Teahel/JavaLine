@@ -10,7 +10,7 @@ JDK 1.8多了红黑树
 ## 默认初始参数值
 ```
 public class HashMap<K,V> extends AbstractMap<K,V>  implements Map<K,V>, Cloneable, Serializable {
-
+    // 序列号
     private static final long serialVersionUID = 362498820763181265L;
     
     
@@ -45,4 +45,28 @@ public class HashMap<K,V> extends AbstractMap<K,V>  implements Map<K,V>, Cloneab
      */
     static final int MIN_TREEIFY_CAPACITY = 64;
     
+   // 每次扩容和更改map结构的计数器
+    transient int modCount;
+    
+    /**
+     * map中实际存储键值对数据大小(不是数组大小)
+     * The number of key-value mappings contained in this map.
+     */
+    transient int size;
+    
+    /**
+     * threshols >= capacity * load factor,临界值超过之后会扩容
+     */
+    int threshold;
+    
+       // 加载因子
+    final float loadFactor;
 ```
+
+## 默认负载因子(DEFAULT_LOAD_FACTOR)为0.75f
+
+负载因子确定了数组的疏密程度，越接近1越密集，越接近0越疏漏
+太疏漏就会导致查找效果太差，太密集导致资源利用率不高
+0.75是给出的一个默认值，官方应该是在测试过后觉得这个值比较恰当的。
+
+
