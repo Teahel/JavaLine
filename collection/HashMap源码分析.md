@@ -137,5 +137,36 @@ final void putMapEntries(Map<? extends K, ? extends V> m, boolean evict) {
     }
 ```
 
+### tableSizeFor方法，使得返回值为2幂
+```  
+   static final int tableSizeFor(int cap) {
+        int n = cap - 1;
+    （1）步  n |= n >>> 1;
+    （2）步  n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+    （3）步   return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+    }
 
 
+     n |= n >>> 1;等于 n = n | (n>>>1)
+     >>>：右移符号   |：位或 两个位只要有一个为1，那么结果就是1，否则就为0
+     如 cap = 11;
+     n = 10 
+ （1）步 10 二进制 为 00001010
+     右移动一位为 00000101
+     并进行位或   
+     00000101
+     00001010
+  =  00001111
+（2）步 00001111 右移动2位 00000011
+       进行位或
+       00001111
+       00000011
+     = 00001111  
+ （3）往下以此类推
+              n        + 1
+  最终得n+1 =8+4+2+1   + 1
+  返回值为16
+  ```
