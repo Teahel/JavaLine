@@ -170,3 +170,82 @@ final void putMapEntries(Map<? extends K, ? extends V> m, boolean evict) {
   最终得n+1 =8+4+2+1   + 1
   返回值为16
   ```
+
+
+### putVal方法
+```
+// put方法
+public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+    }
+    
+hash – hash for key
+key – the key
+value – the value to put
+onlyIfAbsent – if true, 不修改已经保存的值
+evict – 如果为false，则表处于创建模式。
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        if ((tab = table) == null || (n = tab.length) == 0)
+            // 如果没有则resize()创建
+            n = (tab = resize()).length;
+            
+            // i=(n - 1) & hash 得到节点存储位置，并赋值给p,当p为空时则直接new一个新节点赋值。
+        if ((p = tab[i = (n - 1) & hash]) == null)    
+            tab[i] = newNode(hash, key, value, null);
+        else {
+            // 当发现不为空，确哈希值和key相同则直接赋值给e
+            Node<K,V> e; K k;
+            if (p.hash == hash &&
+                ((k = p.key) == key || (key != null && key.equals(k))))
+                e = p;
+            // 发现p是TreeNode的实例，也就是树节点使用putTreeVal方法添加了（红黑树添加节点）
+            else if (p instanceof TreeNode)
+                e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+            else {
+                /**
+                 * p.next为空的时候赋值一个新节点
+                 * 当binCount计算是否超过阈值8，当超过阈值时执行treeifyBin方法
+                 * treeifyBin方法下面有解析，作用为当发现数组长度小于MIN_TREEIFY_CAPACITY（64）时进行扩容
+                 * 否则将链表转换成红黑树
+                 */
+                for (int binCount = 0; ; ++binCount) {
+                    //前面的if ((p = tab[i = (n - 1) & hash]) == null)已经赋值，此时p.next为空，则直接赋值新节点
+                    if ((e = p.next) == null) {
+                        p.next = newNode(hash, key, value, null);
+                        // 判断是否大于阈值8（TREEIFY_THRESHOLD）
+                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    // p.next不为空，也就是e不为空，且e的哈希值和key与传入值相同(链表为循环链表，所以此时相同时则结束循环)
+                    if (e.hash == hash &&
+                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            if (e != null) { // existing mapping for key（已经存在数值了）
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null) //onlyIfAbsent为false 直接覆盖（该解释点是描述put方法所以onlyIfAbsent为false），
+                    e.value = value;
+                //允许 LinkedHashMap后处理的回调    
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        ++modCount;
+        // 实际数据大小是否大于开关，如果是则需要扩容
+        if (++size > threshold)
+            resize();
+        // 插入节点后处理。 具体实现在LinkedHashMap 中。   
+        afterNodeInsertion(evict);
+        return null;
+    }
+```
+
+    
+    
+    
+    
