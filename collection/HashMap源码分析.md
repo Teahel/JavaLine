@@ -55,7 +55,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>  implements Map<K,V>, Cloneab
     transient int size;
     
     /**
-     * threshols >= capacity * load_factor,临界值超过之后会扩容
+     * threshold >= capacity * load_factor,临界值超过之后会扩容
      */
     int threshold;
     
@@ -243,6 +243,95 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
         afterNodeInsertion(evict);
         return null;
     }
+```
+
+#### resize扩容方法
+
+```
+ final Node<K,V>[] resize() {
+        Node<K,V>[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        // 注意threshold = capacity * load_factor
+        int oldThr = threshold;
+        int newCap, newThr = 0;
+        if (oldCap > 0) {
+             // (MAXIMUM_CAPACITY = 2的30次方)
+            if (oldCap >= MAXIMUM_CAPACITY) {
+                // Integer.MAX_VALUE =2的31 -1
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // DEFAULT_INITIAL_CAPACITY = 16， << ：左移，这个判断是超过16，小于最大值之后数组变成扩展成原来的两倍
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr << 1; // 变成原来两倍
+        }
+        else if (oldThr > 0) // threshold已经复制给oldThr
+            newCap = oldThr;
+        else {               // 门限为0，则使用默认参数重新初始化。
+            newCap = DEFAULT_INITIAL_CAPACITY;  //16
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY); //0.75* 16
+        }
+        // 如果新门限等于0
+        if (newThr == 0) {
+            // ft=新门限*默认负载因子
+            float ft = (float)newCap * loadFactor;
+            // 新的初始化容量小于最大容量值，并且ft小于最大容量值，则新门限为ft,否则为2的31次方减1.
+            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        // 新门限赋值旧门限
+        threshold = newThr;
+        @SuppressWarnings({"rawtypes","unchecked"})
+        // 新生成一个数组
+        Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+        // 赋值到全局数据table中
+        table = newTab;
+        if (oldTab != null) {
+            for (int j = 0; j < oldCap; ++j) {
+                Node<K,V> e;
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    if (e.next == null)
+                        newTab[e.hash & (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                    else { // preserve order
+                        Node<K,V> loHead = null, loTail = null;
+                        Node<K,V> hiHead = null, hiTail = null;
+                        Node<K,V> next;
+                        do {
+                            next = e.next;
+                            if ((e.hash & oldCap) == 0) {
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+    }
+
 ```
 
     
