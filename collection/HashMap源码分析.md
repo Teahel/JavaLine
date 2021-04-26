@@ -259,12 +259,13 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
             if (oldCap >= MAXIMUM_CAPACITY) {
                 // Integer.MAX_VALUE =2的31 -1
                 threshold = Integer.MAX_VALUE;
+                // 修改门限之后直接返回数组
                 return oldTab;
             }
             // DEFAULT_INITIAL_CAPACITY = 16， << ：左移，这个判断是超过16，小于最大值之后数组变成扩展成原来的两倍
             else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                      oldCap >= DEFAULT_INITIAL_CAPACITY)
-                newThr = oldThr << 1; // 变成原来两倍
+                newThr = oldThr << 1; // 左移一位变成原来两倍大小门限
         }
         else if (oldThr > 0) // threshold已经复制给oldThr
             newCap = oldThr;
