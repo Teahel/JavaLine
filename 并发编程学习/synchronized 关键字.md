@@ -30,6 +30,24 @@ synchronized (this) {
 }
 ```
 
+* 使用synchronized 实现单例（双重校验锁实现对象单例（线程安全））
 
+```
+public class Singleton {
+
+    //需要注意 uniqueInstance 采用 volatile 关键字修饰也是很有必要。
+    private volatile static Singleton uniqueInstance;
+
+    public static Singleton getUniqueInstance() {
+        if(uniqueInstance == null) {
+            synchronized (Singleton.class) {
+                uniqueInstance = new Singleton();
+            }
+        }
+        return uniqueInstance;
+    }
+
+}
+```
 
 
