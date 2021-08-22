@@ -60,6 +60,17 @@ public class ReentrantLockDemo {
 }
 
 ```
+- ReentrantLock在1秒内获取锁，如果获取不到返回false，这样可以不用无限制等待
+
+ ```
+ if (lock.tryLock(1, TimeUnit.SECONDS)) {
+    try {
+        ...
+    } finally {
+        lock.unlock();
+    }
+}
+ ```
 
 
 
