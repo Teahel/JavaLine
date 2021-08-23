@@ -36,3 +36,48 @@ public class ThreadLocalExample  implements Runnable{
 
 ```
 
+- ThreadLocal源码分析
+
+源码中依靠内部静态类ThreadLocalMap对set和get方法进行操作
+
+ ```
+    public T get() {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null) {
+            ThreadLocalMap.Entry e = map.getEntry(this);
+            if (e != null) {
+                @SuppressWarnings("unchecked")
+                T result = (T)e.value;
+                return result;
+            }
+        }
+        return setInitialValue();
+    }
+    
+ ```
+```
+    public void set(T value) {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null)
+            map.set(this, value);
+        else
+            createMap(t, value);
+    }
+```
+ 通过 下面构造函数存储每个线程的数据
+ 该方法包括 new对象数组，哈希值和INITIAL_CAPACITY-1 进行与运算 散化，避免存储位置冲突。
+ 定好ThreadLocalMap默认大小INITIAL_CAPACITY
+```
+ThreadLocalMap(ThreadLocal<?> firstKey, Object firstValue) {
+            table = new Entry[INITIAL_CAPACITY];
+            int i = firstKey.threadLocalHashCode & (INITIAL_CAPACITY - 1);
+            table[i] = new Entry(firstKey, firstValue);
+            size = 1;
+            setThreshold(INITIAL_CAPACITY);
+        }
+```
+
+
+
