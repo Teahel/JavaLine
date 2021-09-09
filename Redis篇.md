@@ -28,4 +28,26 @@ long long avg_ttl;   /* Average TTL, just for stats */
 * 键空间(key space)：dict字典用来保存数据库中的所有键值对
 * 过期字典(expires):保存数据库中所有键的过期时间，过期时间用UNIX时间戳表示，且值为long long整数
 
+* 具体原理结构图如下
 
+
+![redisDb](https://github.com/Teahel/JavaLine/blob/main/image/RedisDb.png)
+
+#### 过期的数据的删除策略
+
+* 惰性删除 ：只会在取出 key 的时候才对数据进行过期检查。不频繁调动cpu，但是可能会造成太多过期 key 没有被删除。
+
+* 定期删除 ： 每隔一段时间抽取一批 key 执行删除过期 key 操作。Redis 底层会限制删除操作执行的时长和频率来减少过期删除操作对 CPU 时间的影响。
+
+* 定期删除对内存更加友好，惰性删除对 CPU 更加友好。Redis 采用的是 定期删除+惰性/懒汉式删除 。
+
+#### Redis 内存淘汰机制
+
+1. volatile-lru（least recently used）：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰
+2. volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
+3. volatile-random：从已设置过期时间的数据集（server.db[i].expires）中随机选择数据淘汰
+4. allkeys-lru（least recently used）：当内存不足以容纳新写入数据时，在键空间中（全体key集合），移除最近最少使用的 key
+5. allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
+6. no-eviction：禁止驱逐数据，也就是说当内存不足以容纳新写入数据时，新写入操作会报错。
+7. volatile-lfu（least frequently used）：从已设置过期时间的数据集（server.db[i].expires）中挑选最不经常使用的数据淘汰
+8. allkeys-lfu（least frequently used）：当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的 key
