@@ -41,7 +41,7 @@ long long avg_ttl;   /* Average TTL, just for stats */
 
 * 定期删除对内存更加友好，惰性删除对 CPU 更加友好。Redis 采用的是 定期删除+惰性/懒汉式删除 。
 
-#### Redis 内存淘汰机制
+#### Redis 内存淘汰机制（内存不足即将耗尽时触发）
 
 1. volatile-lru（least recently used）：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰
 2. volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
