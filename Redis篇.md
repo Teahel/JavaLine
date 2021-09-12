@@ -89,5 +89,9 @@ appendfsync always    #每次有数据修改发生时都会写入AOF文件,这�
 appendfsync everysec  #每秒钟同步一次，显示地将多个写命令同步到硬盘
 appendfsync no        #让操作系统决定何时进行同步
 ```
+为了兼顾数据和写入性能，用户可以考虑 appendfsync everysec 选项 ，让 Redis 每秒同步一次 AOF 文件，Redis 性能几乎没受到任何影响。而且这样即使出现系统崩溃，用户最多只会丢失一秒之内产生的数据。当硬盘忙于执行写入操作的时候，Redis 还会优雅的放慢自己的速度以便适应硬盘的最大写入速度。
+
+
+
 
 
