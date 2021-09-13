@@ -205,5 +205,42 @@ public Object getObjectInclNullById(Integer id) {
 
  布隆过滤器说某个元素存在，小概率会误判。布隆过滤器说某个元素不在，那么这个元素一定不在。因为不存在的元素哈希值可能与存在的元素哈希值位置相同，虽然概率很小。
 
-#### 缓存雪崩
+#### 缓存击穿
+
+缓存中没有数据，数据库中有数据，由于并发量过大，用户同时访问缓存没有数据从而去数据库访问，造成数据库突然压力增大。
+
+处理办法：
+* 设置热点数据永远不过期。
+
+* 加互斥锁，互斥锁参考代码如下：
+
+```
+public static String getValue(String key) throws InterruptedException {
+        // 缓存读数据
+        String value = getFromRedis(key);
+        if (value == null) {
+            // 获取锁
+            if (reenLock.tryLock()) {
+                try {
+                    //从数据库获取数据
+                    value = getFromMysql(key);
+                    if (value != null) {
+                        //更新缓存
+                        setDataToCache(key,value);
+                    }
+                } finally {
+                    //解锁
+                    reenLock.unLock();
+                }
+
+            } else {
+                //拿不到锁，暂停100ms再去获得锁
+                Thread.sleep(100);
+                value = getValue(key);
+            }
+        }
+        return value;
+    }
+```
+
 
