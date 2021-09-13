@@ -92,6 +92,71 @@ appendfsync no        #让操作系统决定何时进行同步
 为了兼顾数据和写入性能，用户可以考虑 appendfsync everysec 选项 ，让 Redis 每秒同步一次 AOF 文件，Redis 性能几乎没受到任何影响。而且这样即使出现系统崩溃，用户最多只会丢失一秒之内产生的数据。当硬盘忙于执行写入操作的时候，Redis 还会优雅的放慢自己的速度以便适应硬盘的最大写入速度。
 
 
+R#### edis 4.0 对于持久化机制的优化
 
+Redis 4.0 开始支持 RDB 和 AOF 的混合持久化（默认关闭，可以通过配置项 aof-use-rdb-preamble 开启）。
+
+如果把混合持久化打开，AOF 重写的时候就直接把 RDB 的内容写到 AOF 文件开头。这样做的好处是可以结合 RDB 和 AOF 的优点, 快速加载同时避免丢失过多的数据。当然缺点也是有的， AOF 里面的 RDB 部分是压缩格式不再是 AOF 格式，可读性较差。
+
+* 补充内容：AOF 重写
+
+AOF 重写可以产生一个新的 AOF 文件，这个新的 AOF 文件和原有的 AOF 文件所保存的数据库状态一样，但体积更小。
+
+AOF 重写是一个有歧义的名字，该功能是通过读取数据库中的键值对来实现的，程序无须对现有 AOF 文件进行任何读入、分析或者写入操作。
+
+在执行 BGREWRITEAOF 命令时，Redis 服务器会维护一个 AOF 重写缓冲区，该缓冲区会在子进程创建新 AOF 文件期间，记录服务器执行的所有写命令。当子进程完成创建新 AOF 文件的工作之后，服务器会将重写缓冲区中的所有内容追加到新 AOF 文件的末尾，使得新旧两个 AOF 文件所保存的数据库状态一致。最后，服务器用新的 AOF 文件替换旧的 AOF 文件，以此来完成 AOF 文件重写操作。
+
+### Redis 事务
+
+Redis 可以通过 **MULTI**，**EXEC**，**DISCARD** 和 **WATCH** 等命令来实现事务(transaction)功能。
+
+```
+> MULTI
+OK
+> SET USER "wangcha"
+QUEUED
+> GET USER
+QUEUED
+> EXEC
+1) OK
+2) "wangcha"
+
+```
+
+使用 MULTI 命令后可以输入多个命令。Redis 不会立即执行这些命令，而是将它们放到队列，当调用了 EXEC 命令将执行所有命令。
+
+* 开始事务（MULTI）。
+* 命令入队(批量操作 Redis 的命令，先进先出（FIFO）的顺序执行)。
+* 执行事务(EXEC)。
+
+你也可以通过 **DISCARD** 命令取消一个事务，它会清空事务队列中保存的所有命令。
+
+```
+> MULTI
+OK
+> SET USER "wangcha"
+QUEUED
+> GET USER
+QUEUED
+> DISCARD
+OK
+```
+
+**WATCH** 命令用于监听指定的键，当调用 **EXEC** 命令执行事务时，如果一个被 **WATCH** 命令监视的键被修改的话，整个事务都不会执行，直接返回失败。
+
+```
+> WATCH USER
+OK
+> MULTI
+> SET USER "Guide哥"
+OK
+> GET USER
+Guide哥
+> EXEC
+ERR EXEC without MULTI
+```
+
+### Redis 是不支持 roll back 
+官方回复
 
 
