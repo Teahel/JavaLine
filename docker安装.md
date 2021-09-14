@@ -1,14 +1,16 @@
 
 #### manjaro(linux) 安装dokcer
 
-Manjaro Linux 设置国内镜像站：
+
+
+* Manjaro Linux 设置国内镜像站：
 
 ```
 $ sudo pacman-mirrors -i -c China -m rank 
 
 ```
 
-#### Step 0：使用 Pacman 搜索 Docker
+### Step 0：使用 Pacman 搜索 Docker
 
 ```
 $ sudo pacman -Ss docker
@@ -16,6 +18,7 @@ $ sudo pacman -Ss docker
 ### Step 1: 使用 Pacman 安装
 
 #### Step 1.1: Pacman 自动解决依赖关系
+
 ```
 $ sudo pacman -S docker
 正在解析依赖关系...
@@ -47,7 +50,7 @@ $ sudo pacman -S pigz
 
 ```
 ### Step 2: 启动 Docker
-```
+
 #### Step 2.1: 开启 Docker 开机自动启动服务
 
 安装完成后设置 Docker 开机自动启动服务。
@@ -140,5 +143,5 @@ $ docker run hello-world
      https://docs.docker.com/engine/userguide/
 
 ```
-
+到这里表示成功了
 
