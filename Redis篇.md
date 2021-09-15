@@ -14,7 +14,7 @@
 * 实现原理：Redis 通过IO 多路复用程序 来监听来自客户端的大量连接（或者说是监听多个 socket），它会将感兴趣的事件及类型（读、写）注册到内核中并监听每个事件是否发生。
 
 这样的好处非常明显： I/O 多路复用技术的使用让 Redis 不需要额外创建多余的线程来监听客户端的大量连接，降低了资源的消耗
-https://github.com/Teahel/JavaLine/blob/main/image/redis_IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%8E%9F%E7%90%86%E5%9B%BE.jpg
+
 
 ![redis_I/O多路复用原理](https://github.com/Teahel/JavaLine/blob/main/image/redis_IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%8E%9F%E7%90%86%E5%9B%BE.jpg)
 
@@ -282,3 +282,6 @@ Cache Aside Pattern（旁路缓存模式）: 更新 DB，然后直接删除 cach
 
 * 缓存失效时间变短（不推荐，治标不治本） ：我们让缓存数据的过期时间变短，这样的话缓存就会从数据库中加载数据。另外，这种解决办法对于先操作缓存后操作数据库的场景不适用。
 * 增加 cache 更新重试机制（常用）： 如果 cache 服务当前不可用导致缓存删除失败的话，我们就隔一段时间进行重试，重试次数可以自己定。如果多次重试还是失败的话，我们可以把当前更新失败的 key 存入队列中，等缓存服务可用之后，再将缓存中对应的 key 删除即可。
+
+### 确实如下部分需要补充
+https://cloud.tencent.com/developer/article/1546995
