@@ -5,10 +5,8 @@
 
 ### Spring IOC 
 
-
-
-
-
+### BeanFactory 体系
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
 
 
 ### Spring中的Bean是线程安全的吗？
