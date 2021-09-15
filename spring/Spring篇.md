@@ -6,7 +6,7 @@
 ### Spring IOC 
 
 ### BeanFactory 体系
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![BeanFactory 体系](https://github.com/Teahel/JavaLine/blob/main/image/beanfactory.png)
 
 
 ### Spring中的Bean是线程安全的吗？
@@ -37,4 +37,5 @@
 * 3、原型Bean
 
 每次创建一个新对象，也就是线程之间并不存在Bean共享，自然是不会有线程安全的问题。
+
 
