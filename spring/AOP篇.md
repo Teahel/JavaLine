@@ -4,6 +4,7 @@ AOP(Aspect-Oriented Programming:面向切面编程分离业务逻辑和系统级
 系统级服务：日志记录、性能统计、安全控制、事务处理、异常处理等等。
 
 ### AOP实现通过动态代理，对于实现接口的类使用jdk动态代理创建类，对于没有实现接口的类使用的是cglib动态代理生成代理对象的子类
+分析jdk和cglib底层实现原理
 
 
 ### 描述AOP常用的一些术语有通知(Adivce)、切点（Pointcut）、连接点（Join point）、切面（Aspect）、引入（Introduction）、织入（Weaving）
