@@ -110,5 +110,16 @@ public class Test {
 ```
 ### 描述AOP常用的一些术语有通知(Adivce)、切点（Pointcut）、连接点（Join point）、切面（Aspect）、引入（Introduction）、织入（Weaving）
 
-
+通知（Advice）
+通知分为五中类型：
+Before
+在方法被调用之前调用
+After
+在方法完成后调用通知，无论方法是否执行成功
+After-returning
+在方法成功执行之后调用通知
+After-throwing
+在方法抛出异常后调用通知
+Around
+通知了好、包含了被通知的方法，在被通知的方法调用之前后调用之后执行自定义的行为
 
