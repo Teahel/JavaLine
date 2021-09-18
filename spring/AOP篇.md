@@ -59,7 +59,55 @@ public class JdkProxyUtils implements InvocationHandler {
 }
  ```
 
+cglib 代理实现案例
+```
+public class CglibProxy implements MethodInterceptor {
 
+    private Object obj;
+
+    public CglibProxy(Object o) {
+        this.obj = o;
+    }
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+
+        return method.invoke(obj,objects);
+
+    }
+}
+
+```
+```
+public class Person {
+
+    private String username ;
+
+    private String password = "cglib";
+
+    public void setPerson(String username) {
+        this.username = username;
+        System.out.println(this.username+"，"+this.password);
+    }
+
+    public String getPerson() {
+        return username+password;
+    }
+
+}
+```
+```
+public class Test {
+    public static void main(String[] args) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(Person.class);
+        enhancer.setCallback(new CglibProxy(new Person()));
+        Person proxy= (Person)  enhancer.create();
+        proxy.setPerson("ltj");
+        proxy.getPerson();
+    }
+}
+
+```
 ### 描述AOP常用的一些术语有通知(Adivce)、切点（Pointcut）、连接点（Join point）、切面（Aspect）、引入（Introduction）、织入（Weaving）
 
 
