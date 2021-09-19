@@ -38,4 +38,28 @@
 
 每次创建一个新对象，也就是线程之间并不存在Bean共享，自然是不会有线程安全的问题。
 
+### 注解部分
 
+#### @Component 和 @Bean 的区别
+
+ * @Component作用在类中，@Bean作用在方法中
+ * Component通常是通过类路径扫描来自动侦测以及自动装配到 Spring 容器；@Bean通过注解在某方法中，通知spring这里生成一个实例，添加到容器中。
+ * @Bean定义性方面比较灵活，因为可以使用在具体的方法中，许多第三方库可以以类似的方式注入到spring中，比如，redisTemple,jdbcTemple等
+ 
+ @Bean注解使用示例：
+```
+ @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        return template;
+    }
+
+```
+```
+ @Bean
+ public RestTemplate restTemplate() {
+       RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
+       return restTemplate;
+ }
+```
