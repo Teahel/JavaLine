@@ -112,14 +112,90 @@ public class Test {
 
 ### 通知（Advice）
 通知分为五中类型：
-Before
-在方法被调用之前调用
-After
-在方法完成后调用通知，无论方法是否执行成功
-After-returning
-在方法成功执行之后调用通知
-After-throwing
-在方法抛出异常后调用通知
-Around
-通知了好、包含了被通知的方法，在被通知的方法调用之前后调用之后执行自定义的行为
+
+* **Before** ：在方法被调用之前调用
+* **After** ：在方法完成后调用通知，无论方法是否执行成功
+* **After-returning**： 在方法成功执行之后调用通知
+* **After-throwing**：在方法抛出异常后调用通知
+* **Around**: 通知了好、包含了被通知的方法，在被通知的方法调用之前后调用之后执行自定义的行为
+
+下方代码可以明确表示各个术语作用**完整代码在总目录的example文件夹中**
+
+* 第一部分；待增强的方法
+```
+@Component
+public class User {
+    //预增强的方法
+    public void addUser(){
+        System.out.println("目标方法：添加账户！");
+    }
+}
+
+```
+
+* 第二部分，配置通知，切面点，连接点（ProceedingJoinPoint继承JoinPoint）
+```
+@Component
+@Aspect
+public class UserProxy {
+
+    //针对该类下所有的方法:execution(* com.teahel.aop.User.*(..))
+    //针对该类下指定方法：execution(* com.teahel.aop.User.add(..))
+    @Pointcut("execution(* com.teahel.aop.User.*(..))")
+    public void pointCut() {
+
+    }
+
+    @Before("pointCut()")
+    public void before(){
+        System.out.println("before......");
+    }
+
+    @After("pointCut()")
+    public void after(){
+        System.out.println("after......");
+    }
+
+    @Around("pointCut()")
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+        System.out.println("around前......");
+        Object o = pjp.proceed();
+        System.out.println("around后......");
+        return o;
+    }
+
+    @AfterReturning("pointCut()")
+    public void afterReturning(){
+        System.out.println("afterReturning......");
+    }
+
+    @AfterThrowing("pointCut()")
+    public void afterThrowing(){
+        System.out.println("afterThrowing......");
+    }
+
+}
+```
+
+* 启动执行方法
+```
+@Test
+    public void aopTest(){
+        System.out.println("测试开始。。。。。。");
+        user.addUser();
+        System.out.println("测试结束。。。。。。");
+    }
+```
+
+* 执行结果，这个执行结果就十分的清晰那个方法执行的先后。
+```
+测试开始。。。。。。
+around前......
+before......
+目标方法：添加账户！
+afterReturning......
+after......
+around后......
+测试结束。。。。。。
+```
 
