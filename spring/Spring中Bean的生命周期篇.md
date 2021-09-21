@@ -42,3 +42,127 @@ It's also worth noting that if you're using the plain BeanFactory, then features
   * 15、postProcessBeforeDestruction methods of DestructionAwareBeanPostProcessors
   * 16、DisposableBean's destroy
   * 17、a custom destroy-method definition
+  
+### 代码案列解析
+
+```
+@Configuration
+public class User implements BeanNameAware, BeanClassLoaderAware, BeanFactoryAware,
+        EnvironmentAware, EmbeddedValueResolverAware, ResourceLoaderAware, ApplicationEventPublisherAware, MessageSourceAware,
+        ApplicationContextAware, ServletContextAware, InitializingBean , DestructionAwareBeanPostProcessor, DisposableBean{
+
+    public void initMethod(){
+        System.out.println("initMethod ....");
+    }
+
+    public void destroyMethod() {
+        System.out.println("destroyMethod ....");
+    }
+
+   /* @PostConstruct： PostConstruct注解作用在方法上，在依赖注入完成后进行一些初始化操作。这个方法在类被放入service之前被调用，所有支持依赖项注入的类都必须支持此注解。
+    * @PreDestroy：在容器销毁bean之前通知我们进行清理工作
+    */
+
+    @PostConstruct
+    public void myPostConstruct() {
+        System.out.println("PostConstruct ....");
+    }
+
+    // @PreDestroy：在容器销毁bean之前通知我们进行清理工作
+    @PreDestroy
+    public void myDestroy() {
+        System.out.println("myDestroy ....");
+    }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        System.out.println("classLoader.....");
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        System.out.println("beanFactory.....");
+
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("beanName.....");
+
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("afterPropertiesSet.....");
+
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        System.out.println("applicationContext.....");
+
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        System.out.println("applicationEventPublisher.....");
+
+    }
+
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        System.out.println("resolver.....");
+
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        System.out.println("environment.....");
+
+    }
+
+    @Override
+    public void setMessageSource(MessageSource messageSource) {
+        System.out.println("messageSource.....");
+
+    }
+
+    public void  getUsername() {
+        System.out.println("litianjun!");
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        System.out.println("resourceLoader.....");
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        System.out.println("servletContext.....");
+
+    }
+
+
+    //在销毁 bean 时由包含 BeanFactory 调用。
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("destroy.......");
+    }
+
+    @Override
+    public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
+        System.out.println("postProcessBeforeDestruction.....");
+    }
+
+    @Override
+    public boolean requiresDestruction(Object bean) {
+        return DestructionAwareBeanPostProcessor.super.requiresDestruction(bean);
+    }
+
+}
+```
+
+Servlet 是什么？
+
+
+
