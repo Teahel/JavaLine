@@ -23,6 +23,7 @@ public class SpringbeanlifecycleApplication {
 	}
 }
 ```
+
 其中关键是@SpringBootApplication 注解
 ```
 @Target(ElementType.TYPE)
@@ -38,13 +39,61 @@ public @interface SpringBootApplication {
 }
 ```
 
-@EnableAutoConfiguration : 自动装载注解核心
+@EnableAutoConfiguration : 自动装载注解核心 启用 SpringBoot 的自动配置机制
 
 @ComponentScan(excludeFilters = { @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
-		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
-    
-    扫描注解，并过滤
+		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) }) ：扫描注解
+ 注解默认会扫描启动类所在的包下所有的类 ，可以自定义不扫描某些 bean。容器中将排除TypeExcludeFilter和AutoConfigurationExcludeFilter过滤的类。
+ 
+### @EnableAutoConfiguration 解释 启用 SpringBoot 的自动配置机制
+```
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+        //启用自动配置时可用于覆盖的环境属性。
+	String ENABLED_OVERRIDE_PROPERTY = "spring.boot.enableautoconfiguration";
 
-    
+	Class<?>[] exclude() default {};
+
+	String[] excludeName() default {};
+
+}
+```
+@AutoConfigurationPackage ：表示将该类所对应的包加入到自动配置。即将MainApplication.java对应的包名加入到自动装配。
+
+
+关键解释： AutoConfigurationImportSelector
+具体继承的类如下
+
+```
+public class AutoConfigurationImportSelector implements DeferredImportSelector, BeanClassLoaderAware, ResourceLoaderAware, BeanFactoryAware, EnvironmentAware, Ordered {
+
+}
+
+public interface DeferredImportSelector extends ImportSelector {
+
+}
+
+public interface ImportSelector {
+    String[] selectImports(AnnotationMetadata var1);
+}
+```
+
+```
+//
+@Override
+public String[] selectImports(AnnotationMetadata annotationMetadata) {
+	if (!isEnabled(annotationMetadata)) {
+		return NO_IMPORTS;
+	}
+	AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(annotationMetadata);
+	return StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());
+}
+```
+
     
     
