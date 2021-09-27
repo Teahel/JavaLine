@@ -1,16 +1,6 @@
 
 ### SpringBoot 自动装载配置
 
-####  约定优于配置的体现
-
-  * maven的目录结构
-    * 默认有resources文件夹存放配置文件
-    * 默认打包方式为jar
-  * spring-boot-starter-web 中默认包含 spring mvc 相关依赖以及内置的tomcat容器，使得构建一个web应用 更加简单
-  * 默认提供application.properties/yml文件
-  * 默认通过 spring.profiles.active 属性来决定运行环境时读取的配置文件
-  * EnableAutoConfiguration 默认对于依赖的starter进行自动装载
-
 #### 自动装载原理解析
 
 每个项目都有一个启动类，大概类似如下
@@ -24,7 +14,7 @@ public class SpringbeanlifecycleApplication {
 }
 ```
 
-其中关键是@SpringBootApplication 注解
+其中关键是@EnableAutoConfiguration 注解,@SpringBootConfiguration实际就是普通的注解标志
 ```
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -114,9 +104,7 @@ protected AutoConfigurationEntry getAutoConfigurationEntry(AnnotationMetadata an
 		checkExcludedClasses(configurations, exclusions);
 		// 去掉所有排除项
 		configurations.removeAll(exclusions);
-		// 过滤不是在AutoConfigurationMetadata的configurations要去掉
 		configurations = getConfigurationClassFilter().filter(configurations);
-		// 只有依赖到的所有 Spring Boot Starter 下的META-INF/spring.factories才会被加载
 		fireAutoConfigurationImportEvents(configurations, exclusions);
 		return new AutoConfigurationEntry(configurations, exclusions);
 	}
@@ -135,7 +123,6 @@ protected AutoConfigurationEntry getAutoConfigurationEntry(AnnotationMetadata an
 ```
 
 ### 
-
-Spring Boot 启动的时候会通过 @EnableAutoConfiguration 注解找到 META-INF/spring.factories 配置文件中的所有自动配置类，
-    
+Spring Boot 启动的时候会通过 @EnableAutoConfiguration 中getAutoConfigurationEntry会使用springfactoriesLoader.loadFactoryNames找到所有jar中的 META-INF/spring.factories 配置文件；
+注意Springboot 自身的spring-boot-autoconfigure.jar 下面的META-INF/spring.factories ，如下图所示
     
