@@ -170,4 +170,6 @@ public class RedisAutoConfiguration {
 }
 ```
 Rabbitmq依赖没有添加到pom.xml中，org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration类中注解@ConditionalOnClass({ RabbitTemplate.class, Channel.class })
-无法找到该类，所以在自动装载时直接过滤。
+无法找到该类，所以在自动装载时直接过滤。如下图
+![rabbitmqAutoConguration](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmqAutoConguration.jpg)
+
