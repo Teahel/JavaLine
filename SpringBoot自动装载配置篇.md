@@ -125,4 +125,12 @@ protected AutoConfigurationEntry getAutoConfigurationEntry(AnnotationMetadata an
 ### 
 Spring Boot 启动的时候会通过 @EnableAutoConfiguration 中getAutoConfigurationEntry会使用springfactoriesLoader.loadFactoryNames找到所有jar中的 META-INF/spring.factories 配置文件；
 注意Springboot 自身的spring-boot-autoconfigure.jar 下面的META-INF/spring.factories ，如下图所示
-    
+![Image of auto_configure](https://github.com/Teahel/JavaLine/blob/main/image/auto_configure.jpg)
+
+ 从截图看到org.springframework.boot.autoconfigure.EnableAutoConfiguration为key的value有很多，value都是AutoConfiguration结尾。以逗号隔开。
+ 这个是Springboot自带的，启动之后会去加载，也可以自己自定义写META-INF/spring.factories文件，然后以org.springframework.boot.autoconfigure.EnableAutoConfiguration为key
+ 然后具体的value为具体的类。看下图spring-boot-autoconfigure.jar的value类中，Redis为例 AutoConfiguration
+ 在spring-boot-autoconfigure.jar的META-INF/spring.factories文件中，找到value为 org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration的。idea编译器下，点击这个value就可以进入该类。具体代码如下图
+ 
+ 
+ 
