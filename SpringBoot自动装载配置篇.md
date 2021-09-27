@@ -131,6 +131,43 @@ Spring Boot 启动的时候会通过 @EnableAutoConfiguration 中getAutoConfigur
  这个是Springboot自带的，启动之后会去加载，也可以自己自定义写META-INF/spring.factories文件，然后以org.springframework.boot.autoconfigure.EnableAutoConfiguration为key
  然后具体的value为具体的类。看下图spring-boot-autoconfigure.jar的value类中，Redis为例 AutoConfiguration
  在spring-boot-autoconfigure.jar的META-INF/spring.factories文件中，找到value为 org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration的。idea编译器下，点击这个value就可以进入该类。具体代码如下图
+
  
- 
- 
+ ![redisAutoConguration](https://github.com/Teahel/JavaLine/blob/main/image/redisAutoConfigure.jpg)
+
+
+具体解释如下
+@Conditional条件满足情况下才会注入ioc容器，上方图片中因为我添加了Redis的jar在pom.xml文件中，所以idea没有提示报错
+
+```
+@Configuration(proxyBeanMethods = false)
+//是否存在该类
+@ConditionalOnClass(RedisOperations.class)
+//加载redis的配置，具体下方代码解释
+@EnableConfigurationProperties(RedisProperties.class)
+//redis的两种实现方式Lettuce  Jedis
+@Import({ LettuceConnectionConfiguration.class, JedisConnectionConfiguration.class })
+public class RedisAutoConfiguration {
+
+	@Bean
+	@ConditionalOnMissingBean(name = "redisTemplate")
+	@ConditionalOnSingleCandidate(RedisConnectionFactory.class)
+	public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+		RedisTemplate<Object, Object> template = new RedisTemplate<>();
+		template.setConnectionFactory(redisConnectionFactory);
+		return template;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	@ConditionalOnSingleCandidate(RedisConnectionFactory.class)
+	public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+		StringRedisTemplate template = new StringRedisTemplate();
+		template.setConnectionFactory(redisConnectionFactory);
+		return template;
+	}
+
+}
+```
+Rabbitmq依赖没有添加到pom.xml中，org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration类中注解@ConditionalOnClass({ RabbitTemplate.class, Channel.class })
+无法找到该类，所以在自动装载时直接过滤。
