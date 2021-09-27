@@ -134,6 +134,23 @@ Spring Boot 启动的时候会通过 @EnableAutoConfiguration 中getAutoConfigur
 
  
  ![redisAutoConguration](https://github.com/Teahel/JavaLine/blob/main/image/redisAutoConfigure.jpg)
+ 注解提示
+ 
+@Conditional扩展注解 | 作用（判断是否满足当前指定条件）
+------------ | -------------
+@ConditionalOnJava | 系统的java版本是否符合要求
+@ConditionalOnBean | 容器中存在指定Bean；
+@ConditionalOnMissingBean | 容器中不存在指定Bean；
+@ConditionalOnExpression | 满足SpEL表达式指定
+@ConditionalOnClass | 系统中有指定的类
+@ConditionalOnMissingClass | 系统中没有指定的类
+@ConditionalOnSingleCandidate | 容器中只有一个指定的Bean，或者这个Bean是首选Bean
+@ConditionalOnProperty | 系统中指定的属性是否有指定的值
+@ConditionalOnResource | 类路径下是否存在指定资源文件
+@ConditionalOnWebApplication | 当前是web环境
+@ConditionalOnNotWebApplication | 当前不是web环境
+@ConditionalOnJnd |JNDI存在指定项
+
 
 
 具体解释如下
@@ -169,5 +186,70 @@ public class RedisAutoConfiguration {
 
 }
 ```
+解释：@EnableConfigurationProperties(RedisProperties.class),下方代码中直接看出，在Springboot的application.properties或者yml文件中直接以spring.redis为前缀，添加其他的端口或者ip等信息
+同理自定义方式也是类似做法。
+```
+@ConfigurationProperties(prefix = "spring.redis")
+public class RedisProperties {
+
+	/**
+	 * Database index used by the connection factory.
+	 */
+	private int database = 0;
+
+	/**
+	 * Connection URL. Overrides host, port, and password. User is ignored. Example:
+	 * redis://user:password@example.com:6379
+	 */
+	private String url;
+
+	/**
+	 * Redis server host.
+	 */
+	private String host = "localhost";
+
+	/**
+	 * Login username of the redis server.
+	 */
+	private String username;
+
+	/**
+	 * Login password of the redis server.
+	 */
+	private String password;
+
+	/**
+	 * Redis server port.
+	 */
+	private int port = 6379;
+
+	/**
+	 * Whether to enable SSL support.
+	 */
+	private boolean ssl;
+
+	/**
+	 * Read timeout.
+	 */
+	private Duration timeout;
+
+	/**
+	 * Connection timeout.
+	 */
+	private Duration connectTimeout;
+        .....
+	.....
+	.....
+}
+```
 Rabbitmq依赖没有添加到pom.xml中，org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration类中注解@ConditionalOnClass({ RabbitTemplate.class, Channel.class })
-无法找到该类，所以在自动装载时直接过滤。
+无法找到该类，所以在自动装载时直接过滤。如下图
+![rabbitmqAutoConguration](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmqAutoConguration.jpg)
+
+
+
+### 自定义方式
+上方是Springboot自带的，添加
+
+下面我将自己编写一个
+
