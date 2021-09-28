@@ -249,7 +249,106 @@ Rabbitmq依赖没有添加到pom.xml中，org.springframework.boot.autoconfigure
 
 
 ### 自定义方式
-上方是Springboot自带的，添加
+源代码在 example文件夹中，项目名称为 **auto-configuration-test**
+上方是Springboot自带，以spring开头的jar.
 
 下面我将自己编写一个
+
+* UserAutoConfiguration
+```
+//添加相关注解
+@Configuration(proxyBeanMethods = false)
+//具体注入类
+@ConditionalOnClass(UserManager.class)
+//配置信息类
+@EnableConfigurationProperties(UserProperties.class)
+public class UserAutoConfiguration {
+    //获取appliaction.properties配置文件的配置信息
+    @Autowired
+    UserProperties userProperties;
+    //@Bean 注入ioc
+    @Bean
+    public UserManager getUserManager() {
+        return new UserManager(userProperties.getPassword(),userProperties.getUsername());
+    }
+
+}
+```
+* 对象实体
+```
+public class UserManager {
+
+    private String username;
+
+    private String password;
+
+    public UserManager(String password,String username) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+
+```
+* 配置属性，user.manager开头的配置，具备 username 、password属性
+```
+@ConfigurationProperties(
+        prefix = "user.manager"
+)
+@Configuration
+public class UserProperties {
+
+    private String username;
+
+    private String password;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+```
+在项目resource下的meta-info文件夹中，建立spring.factories配置文件，以下是具体配置内容
+org.springframework.boot.autoconfigure.EnableAutoConfiguration为key
+value为具体的自动装载类，以AutoConfiguration结尾的类。具备相关@conditional注解
+```
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.example.autoconfigurationtest.UserAutoConfiguration
+```
+
+* 项目的application.properties文件中添加下发配置文件
+```
+user.manager.password="litianjun"
+user.manager.username="litianjun"
+```
+
+
+
+
 
