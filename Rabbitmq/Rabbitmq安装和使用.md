@@ -26,6 +26,7 @@ docker run -d --name rabbit -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_P
 【 -p 15672:15672】 是控制平台docker映射到系统的对应端口
 
 【 -p 5672:5672】 是应用程序的访问端口
+![This is an image](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq/rabbitmq_config.jpg)
 
 ```
 4 web端的管理界面：
