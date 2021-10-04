@@ -7,11 +7,15 @@
 ```
 docker search rabbitmq:management
 ```
+![This is an image](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq/rabbitmq_image.jpg)
+
 2 将镜像下载下来
 
 ```
     docker pull rabbitmq:management
 ```
+![This is an image](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq/rabbitmq_pull.jpg)
+
 3 发布docker镜像
 
 ```
@@ -25,4 +29,6 @@ docker run -d --name rabbit -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_P
 
 ```
 4 web端的管理界面：
+![This is an image](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq/rabbitmq_web.jpg)
+
 
