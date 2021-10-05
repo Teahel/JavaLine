@@ -171,5 +171,35 @@ public class FanoutConsumer1 extends RabbitmqApplicationTests {
 
 ![rabbitmq_topic](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq_topic.jpg)
 
+部分代码如下
+* TopicProducer2
+```
+public class TopicProducer2 extends RabbitmqApplicationTests {
 
+    @Autowired
+    private RabbitMessagingTemplate rabbitMessagingTemplate;
 
+    @Test
+    public void sendMessage() {
+        String msg = "Topic,I do this!";
+        System.out.println("\n");
+        System.out.println("TopicProducer2发送消息: "+msg);
+        System.out.println("\n");
+        rabbitMessagingTemplate.convertAndSend("topic.exchange","topic.test",msg);
+    }
+}
+
+```
+* TopicConsumer2
+```
+@RabbitListener(queues = "test_topic_queue2")
+public class TopicConsumer2 extends RabbitmqApplicationTests {
+
+    @RabbitHandler
+    public void handleMessage(String msg) {
+        System.out.println("\n");
+        System.out.println("TopicConsumer test_topic_queue2 处理带标致#符号消息："+msg);
+    }
+}
+
+```
