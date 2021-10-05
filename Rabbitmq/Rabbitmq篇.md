@@ -4,3 +4,5 @@
 
 Rabbitmq 类似菜鸟驿站流程，有人寄来东西，然后暂存之后，发给收件方。生产者提供消息，消费者消费信息。
 下方是一个整体模型结构。
+![rabbitmq.jpg](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq.jpg)
+
