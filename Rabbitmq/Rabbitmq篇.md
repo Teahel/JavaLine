@@ -110,7 +110,7 @@ public class RabbitmqConsumer extends RabbitmqApplicationTests {
 
 * 不针对指定的routingkey,既不针对特定队列。若是与fanout exchange队列绑定的所有队列都能收到消息。
 * 若是队列没有绑定队列则消息被丢弃
-![rabbitmq_direct.jpg](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq_direct.png)
+![rabbitmq_fanout.jpg](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq_fanout.jpg)
 
 
 
