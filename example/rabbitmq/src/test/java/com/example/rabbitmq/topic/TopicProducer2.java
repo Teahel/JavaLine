@@ -12,6 +12,10 @@ public class TopicProducer2 extends RabbitmqApplicationTests {
 
     @Test
     public void sendMessage() {
-        rabbitMessagingTemplate.convertAndSend("topic.exchange","topic.test","Topic,I use topic# flag!");
+        String msg = "Topic,I do this!";
+        System.out.println("\n");
+        System.out.println("TopicProducer2发送消息: "+msg);
+        System.out.println("\n");
+        rabbitMessagingTemplate.convertAndSend("topic.exchange","topic.test",msg);
     }
 }
