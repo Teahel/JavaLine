@@ -114,6 +114,60 @@ public class RabbitmqConsumer extends RabbitmqApplicationTests {
 
 ![rabbitmq_fanout](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq_fanout.jpg)
 
+* FanoutProducer
+```
+public class FanoutProducer extends RabbitmqApplicationTests {
+
+    @Autowired
+    private RabbitMessagingTemplate rabbitMessagingTemplate;
+
+    @Test
+    public void sendMessage() {
+        System.out.println("\n");
+        System.out.println("FanoutProducer:发送消息");
+        System.out.println("\n");
+        rabbitMessagingTemplate.convertAndSend("fanout.exchange","","fanout,I do this!");
+    }
+
+}
+```
+
+* FanoutConsumer
+```
+@RabbitListener(queues = "test_fanout_queue")
+public class FanoutConsumer extends RabbitmqApplicationTests {
+
+
+    @RabbitHandler
+    public void handleMessage(String msg) {
+        System.out.println("\n");
+        System.out.println("FanoutConsumer2处理消息："+msg);
+        System.out.println(msg);
+    }
+
+}
+```
+* FanoutConsumer1
+```
+@RabbitListener(queues = "test_fanout_queue2")
+public class FanoutConsumer1 extends RabbitmqApplicationTests {
+
+    @RabbitHandler
+    public void handleMessage(String msg) {
+        System.out.println("\n");
+        System.out.println("FanoutConsumer1处理消息："+msg);
+        System.out.println(msg);
+    }
+
+}
+```
+#### topic模式
+
+指定特定的交换机，程序接口需要明确routing key名称。在rabbimq web界面中添加交换机时需要指定可以使用如下符号，**#** 符号以代替一个或者多个字符，
+如user.acount.name web界面的队列绑定的routingkey可以这样写 user.# ，以 **.** 分割开。* 符号仅匹配一个单词，例如，routingkey 为user.acount.name
+可以用user.acount.* 接收
+
+创建交换机需要选择topic模式，以及选择上述案例配置的队列。
 
 
 
