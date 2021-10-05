@@ -169,6 +169,7 @@ public class FanoutConsumer1 extends RabbitmqApplicationTests {
 
 创建交换机需要选择topic模式，以及选择上述案例配置的队列。
 
+![rabbitmq_topic](https://github.com/Teahel/JavaLine/blob/main/image/rabbitmq_topic.jpg)
 
 
 
