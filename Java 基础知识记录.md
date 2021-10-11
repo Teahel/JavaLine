@@ -69,6 +69,12 @@ protected void finalize() throws Throwable { }//实例被垃圾回收器回收�
 ### 异常分类
 
 
+![throwable](https://github.com/Teahel/JavaLine/blob/main/image/throwable.jpg)
 
+#### Throwable 类常用的方法
+
+* public String getMessage() //返回异常的简单描述
+* public String getLocalizedMessage()//返回异常对象的本地化描述，子类会覆盖这个方法，为了创建一个本地化信息，如果子类没有覆盖这个方法，那么默认返回和**getMessage**一样
+* public String toString() //
 
 
