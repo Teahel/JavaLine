@@ -75,6 +75,14 @@ protected void finalize() throws Throwable { }//实例被垃圾回收器回收�
 
 * public String getMessage() //返回异常的简单描述
 * public String getLocalizedMessage()//返回异常对象的本地化描述，子类会覆盖这个方法，为了创建一个本地化信息，如果子类没有覆盖这个方法，那么默认返回和**getMessage**一样
-* public String toString() //
+* public String toString() //返回异常发生时的详细信息
+* public void printStackTrace()//在控制台上打印 Throwable 对象封装的异常信息
+
+#### try-catch-finally 异常捕捉处理
+
+**try**：用于捕捉异常，
+**catch**： 处理异常，可以存在多个，分类处理
+**finally** ：无论是否有异常都会执行，就算是在try部分，或者 catch 部分return 执行之前也会执行。
+
 
 
