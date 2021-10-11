@@ -66,6 +66,7 @@ protected void finalize() throws Throwable { }//实例被垃圾回收器回收�
 
 ```
 
+### 异常分类
 
 
 
