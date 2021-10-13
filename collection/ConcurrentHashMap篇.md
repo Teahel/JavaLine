@@ -3,7 +3,7 @@
 #### 结构图
 
 
-![ConcurrentHashMap](https://myoctocat.com/assets/images/base-octocat.svg)
+![ConcurrentHashMap](https://github.com/Teahel/JavaLine/blob/main/image/ConcurrentHashMap2.png)
 
 节点元素修饰使用了关键词 **final** **volatile**
 
