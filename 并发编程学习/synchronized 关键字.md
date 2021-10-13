@@ -22,7 +22,7 @@ synchronized static void method() {
     //业务代码
 }
 ```
-- 指定加锁对象，对给定对象/类加锁。synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁。synchronized(类.class) 表示进入同步代码前要获得 当前 class 的锁
+- 指定加锁对象，对给定对象/类加锁。synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁。synchronized(类.class) 表示进入同步代码前要获得 所有该类 的锁
 
 ```
 synchronized (this) {
