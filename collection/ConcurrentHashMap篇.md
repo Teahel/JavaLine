@@ -138,3 +138,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
         return null;
     }
 ```
+
+* 1.如果该哈希值位置判断哈希值和key都相等则直接返回value
+* 2.如果哈希值为小于0，则为链表或者红黑树，需要循环遍历判断，找到数据则返回
+* 3.以上都无法找到，则返回null
