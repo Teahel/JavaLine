@@ -1,7 +1,7 @@
 ### ConcurrentHashMap jdk1.8
 
 #### 结构图
-
+底层数据结构使用的是数组和链表、红黑树
 
 ![ConcurrentHashMap](https://github.com/Teahel/JavaLine/blob/main/image/ConcurrentHashMap2.png)
 
