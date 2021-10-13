@@ -1,4 +1,12 @@
-### ConcurrentHashMap
+### ConcurrentHashMap jdk1.8
+
+#### 结构图
+
+
+
+
+节点元素修饰使用了关键词 **final** **volatile**
+
 ```
 static class Node<K,V> implements Map.Entry<K,V> {
         final int hash;
