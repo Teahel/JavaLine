@@ -68,7 +68,7 @@ public class ThreadLocalExample  implements Runnable{
 ```
  通过 下面构造函数存储每个线程的数据
  该方法包括 new对象数组，哈希值和INITIAL_CAPACITY-1 进行与运算 散化，避免存储位置冲突。
- 定好ThreadLocalMap默认大小INITIAL_CAPACITY
+ 定好ThreadLocalMap默认大小INITIAL_CAPACITY（private static final int INITIAL_CAPACITY = 16;）
 ```
 ThreadLocalMap(ThreadLocal<?> firstKey, Object firstValue) {
             table = new Entry[INITIAL_CAPACITY];
