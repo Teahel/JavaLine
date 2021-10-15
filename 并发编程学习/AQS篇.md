@@ -48,8 +48,8 @@ protected final boolean compareAndSetState(int expect, int update) {
 ```
 #### 2.AQS 定义两种资源共享方式
 
-* Exclusive（独占）：只有一个线程能执行，如 ReentrantLock。又可分为公平锁和非公平锁：
-公平锁：按照线程在队列中的排队顺序，先到者先拿到锁
+* Exclusive（独占）：只有一个线程能执行，如 ReentrantLock,是双重锁，分为公平锁和非公平锁
+>公平锁：按照线程在队列中的排队顺序，先到者先拿到锁
 非公平锁：当线程要获取锁时，无视队列顺序直接去抢锁，谁抢到就是谁的
 
 * Share（共享）：多个线程可同时执行，如 CountDownLatch、Semaphore、 CyclicBarrier、ReadWriteLock 我们都会在后面讲到。
