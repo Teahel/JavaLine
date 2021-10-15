@@ -2,7 +2,7 @@
 
 #### 1.AQS原理分析
 
-CLH(Craig,Landin,and Hagersten)队列是一个虚拟的双向队列（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点（Node）来实现锁的分配。
+**CLH(Craig,Landin,and Hagersten)** 队列是一个虚拟的双向队列（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点（Node）来实现锁的分配。
 
 CLH队列原理图
 
@@ -29,11 +29,16 @@ CLH队列原理图
         
 // volatile 修改同步状态
 private volatile int state;
-
+```
+```
 // 获取状态
 protected final int getState() {return state; }
+```
+```
 // 设置状态，这个操作会将赋值写入内存
 protected final void setState(int newState) {    state = newState;   }
+```
+```
 // 和expect值比较，如果正确就赋值为update
 protected final boolean compareAndSetState(int expect, int update) {
         // 原子操作（CAS）
