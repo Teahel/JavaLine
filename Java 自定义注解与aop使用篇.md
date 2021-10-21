@@ -39,3 +39,4 @@ public @interface UserLog {
 - 仅class文件：RetentionPolicy.CLASS；
 - 运行期：RetentionPolicy.RUNTIME。
 
+@Repeatable
