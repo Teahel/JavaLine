@@ -39,4 +39,56 @@ public @interface UserLog {
 - 仅class文件：RetentionPolicy.CLASS；
 - 运行期：RetentionPolicy.RUNTIME。
 
-@Repeatable
+**@Repeatable** 定义注解是否可以重复;具体代码在**annotation**项目
+```
+@Target(ElementType.TYPE)
+@Repeatable(Infomations.class)
+public @interface Infomation {
+
+    String place() default "shenzhen";
+
+    String house() default "14level";
+}
+
+@Target(ElementType.TYPE)
+public @interface Infomations {
+
+    Infomation[] value();
+}
+
+
+
+```
+经过**Repeatable** 修饰之后，可以多次添加**@Infomation**
+
+```
+@Infomation(place = "1",house = "2")
+@Infomation(place = "3",house = "4")
+public class Hello {
+}
+```
+**@Inherited** 
+使用@Inherited定义子类是否可继承父类定义的Annotation。
+**@Inherited** 仅针对**@Target(ElementType.TYPE)** 类型的annotation有效，并且仅针对class的继承，对interface的继承无效：
+
+```
+@Inherited
+@Target(ElementType.TYPE)
+public @interface User {
+    String username() default "heihei";
+}
+
+```
+
+```
+@User(username = "heiehei")
+public class Person {
+}
+
+```
+```
+public class Student extends Person{
+}
+```
+
+
