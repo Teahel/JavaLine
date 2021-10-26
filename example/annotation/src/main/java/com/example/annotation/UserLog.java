@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * @date： 2021-10-21
  */
 
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface UserLog {
