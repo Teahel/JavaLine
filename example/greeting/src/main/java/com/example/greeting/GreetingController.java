@@ -12,7 +12,7 @@ public class GreetingController {
 
     @GetMapping("/get-greeting")
     public String greeting() {
-        return helloWorldClient.helloWorld();
+        return helloWorldClient.HelloWorld();
     }
 
 }

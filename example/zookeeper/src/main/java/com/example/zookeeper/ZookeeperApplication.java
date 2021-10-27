@@ -18,8 +18,8 @@ public class ZookeeperApplication {
 		SpringApplication.run(ZookeeperApplication.class, args);
 	}
 
-	@GetMapping("/")
-	public String home() {
+	@GetMapping("/helloworld")
+	public String helloWorld() {
 		return "Hello World!";
 	}
 
