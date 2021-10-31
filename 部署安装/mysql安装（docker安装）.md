@@ -26,8 +26,8 @@ docker pull mysql:5.7
 
 ### 命令操作
 ```
-# 进入容器
-docker exec -it mysql bash
+#进入容器
+docker exec -it 964e73946bc3 bash
 
 #登录mysql
 mysql -u root -p
