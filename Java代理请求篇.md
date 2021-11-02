@@ -1,20 +1,15 @@
 ```
    @Test
     public void httpTest() throws IOException {
-      /*  String ss = HttpUtils.sendGet("https://api.pancakeswap.info/api/v2/tokens");
-
-        System.out.println(ss);*/
-        String url = "https://api.pancakeswap.info/api/v2/tokens";
-      /*  HttpGet httpGet = new HttpGet("https://api.pancakeswap.info/api/v2/tokens");*/
 
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-                new AuthScope("101.32.239.132", 50297),
-                new UsernamePasswordCredentials("TKKNGqIPf7", "uWZu69UXAa"));
+                new AuthScope("1.32.23.12", 0597),
+                new UsernamePasswordCredentials("TKKNf7", "uWZu6a"));
 
         CloseableHttpClient client = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
 
-        HttpHost proxy = new HttpHost("101.32.239.132",50297 );
+        HttpHost proxy = new HttpHost("1.32.23.12",0597 );
         RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
 
 
