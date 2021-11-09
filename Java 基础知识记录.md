@@ -85,4 +85,81 @@ protected void finalize() throws Throwable { }//实例被垃圾回收器回收�
 **finally** ：无论是否有异常都会执行，就算是在try部分，或者 catch 部分return 执行之前也会执行。
 
 
+### BigDecimal
+商业计算使用，金额，或者更重要计算
 
+```
+// 第一种用new一个对象的方式
+BigDecimal b1 = new BigDecimal("0.0");
+// 第二种用内部方法获取
+BigDecimal b2 = BigDecimal.valueOf(0.0);
+```
+
+* 加减乘除使用方式
+
+Subtract(减法)
+
+```
+        BigDecimal bigdecimal = new BigDecimal("0");
+        bigdecimal.subtract()
+```
+
+add(加法)
+
+```
+        BigDecimal bigdecimal = new BigDecimal("0");
+        bigdecimal.add()
+```
+
+除法
+```
+BigDecimal decimal = new BigDecimal
+ decimal.divide(2,2,BigDecimal.ROUND_HALF_UP)
+```
+multiply(乘法)
+```
+BigDecimal decimal = new BigDecimal
+ decimal.multiply(2,2,BigDecimal.ROUND_HALF_UP)
+```
+#### roundingMode
+```
+public static void main(String[] args) 
+{
+	//ROUND_DOWN————删除多余的小数
+	BigDecimal bd1 = new BigDecimal("2.0999");
+	System.out.println(bd1.setScale(2, BigDecimal.ROUND_DOWN));
+	
+	/*
+	ROUND_UP——进位处理
+	详解：假设2.18000001保留2位小数做ROUND_UP处理，把8后面的数拿出来看做一个整数，
+	如果这个整数大于0，则做进位处理，否则不进位，其结果是还2.18。8后面无数字结果还是2.18
+	*/
+	BigDecimal bd2 = new BigDecimal("2.180000000");
+	System.out.println(bd2.setScale(2, BigDecimal.ROUND_UP));
+	
+	//ROUND_HALF_UP——四舍五入，和数学上的四舍五入概念一样
+	BigDecimal bd3 = new BigDecimal("2.1865186");
+	System.out.println(bd3.setScale(3, BigDecimal.ROUND_UP));
+	
+	/*
+	ROUND_HALF_DOWN——1-5不进位，6或以上才进位
+	详解：假设2.185000001保留2位小数做ROUND_HALF_DOWN处理，且8后一位是5，把5后面的数拿出来看做一个整数，
+	如果这个整数大于0，则按照ROUND_HALF_UP规则处理，其结果为2.19。如果这个整数为0则，其结果为2.18
+	*/
+	BigDecimal bd4 = new BigDecimal("2.18500000");
+	System.out.println(bd4.setScale(2, BigDecimal.ROUND_HALF_DOWN));
+	BigDecimal bd5 = new BigDecimal("2.18500001");
+	System.out.println(bd5.setScale(2, BigDecimal.ROUND_HALF_DOWN));
+	
+	/*
+	ROUND_HALF_EVEN:
+	如果第2位是奇数,则做ROUND_HALF_UP
+	如果第2位是偶数,则做ROUND_HALF_DOWN
+	*/
+    BigDecimal bd6 = new BigDecimal("31.1150");
+    System.out.println(bd6.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+    BigDecimal bd7 = new BigDecimal("31.1250001");
+    System.out.println(bd7.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+}
+
+```
