@@ -9,7 +9,7 @@ Rabbitmq 类似菜鸟驿站流程，有人寄来东西，然后暂存之后，�
 
 ### 2、三种方式
 
-#### 1、direct 方式
+#### 1、direct(直接) 方式
 
 * rabbitmq自带一个没有名字默认的交换器，名字叫做amqp default.也可以自己创建选择类型
 * 程序接口调用时，交换机名称字段使用："" 既可以默认使用。
@@ -107,7 +107,7 @@ public class RabbitmqConsumer extends RabbitmqApplicationTests {
 
 
 ```
-#### 2、fanout 模式
+#### 2、fanout（广播） 模式
 
 * 不针对指定的routingkey,既不针对特定队列。若是与fanout exchange队列绑定的所有队列都能收到消息。
 * 若是队列没有绑定队列则消息被丢弃
@@ -161,7 +161,7 @@ public class FanoutConsumer1 extends RabbitmqApplicationTests {
 
 }
 ```
-#### topic模式
+#### topic（话题）模式
 
 指定特定的交换机，程序接口需要明确routing key名称。在rabbimq web界面中添加交换机时需要指定可以使用如下符号，**#** 符号以代替一个或者多个字符，
 如user.acount.name web界面的队列绑定的routingkey可以这样写 user.# ，以 **.** 分割开。* 符号仅匹配一个单词，例如，routingkey 为user.acount.name
