@@ -53,7 +53,7 @@
         // 如果新容量还小于最小需求量，那么最新容量以最小需求量为准。
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
-        // 如果最新需求量比ArrayList定义的容量最大值还大，调用**hugeCapacity**方法,判断最小需求量比AX_ARRAY_SIZE大(值大小为Integer.MAX_VALUE - 8) 则最新量为Integer.MAX_VALUE，不然那为MAX_ARRAY_SIZE。  
+        // 如果最新需求量比ArrayList定义的容量最大值还大，调用**hugeCapacity**方法,判断最小需求量比MAX_ARRAY_SIZE大(值大小为Integer.MAX_VALUE - 8) 则最新量为Integer.MAX_VALUE，不然那为MAX_ARRAY_SIZE。  
         if (newCapacity - MAX_ARRAY_SIZE > 0)
             newCapacity = hugeCapacity(minCapacity);
         //数组复制
@@ -70,7 +70,7 @@
 ```
 * 1.将当前数组大小值通过右移，得到1.5倍数值，为暂时最新容量
 * 2.先比较最小需要量，小于则最新容量大小为最小需要量
-* 3.在比较，如果最新容量比ArrayList定义最大容量大则最新容量为int最大整数
+* 3.在比较，如果最新容量比ArrayList定义最大容量大则最新容量为最大整数
 * 4.将数组进行复制
 
 
