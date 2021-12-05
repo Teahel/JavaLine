@@ -18,6 +18,7 @@ public class HelloWorldClient {
     @Autowired
     private TheClient theClient;
 
+    //这里Feignclient的name为需要需要请求的服务器名称，案例zookeeper中的application-name
     @FeignClient(name = "helloworld")
     interface TheClient {
         @GetMapping(path = "/helloworld")
