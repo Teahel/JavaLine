@@ -1,19 +1,19 @@
-import com.ioc.test.annotation.IocComponentScan;
+import com.ioc.test.annotation.IocAutowired;
+import com.ioc.test.annotation.IocComponent;
 import com.ioc.test.core.AnnotationApplcationContext;
+import com.ioc.test.demo.IocAutowriedPeople;
+import com.ioc.test.demo.People;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-@IocComponentScan("com.ioc.test")
+@IocComponent
 public class IocApplication {
+
+    @IocAutowired
+    private static IocAutowriedPeople iocAutowriedPeople;
 
     public static void main(String[] args) {
         AnnotationApplcationContext context = new AnnotationApplcationContext();
         context.init(IocApplication.class);
+        iocAutowriedPeople.show();
     }
 
 }
