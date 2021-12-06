@@ -1,4 +1,4 @@
-package utils;
+package com.ioc.test.utils;
 
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.NoOp;

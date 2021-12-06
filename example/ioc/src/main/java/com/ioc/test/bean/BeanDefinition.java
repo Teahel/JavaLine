@@ -1,8 +1,14 @@
-package bean;
+package com.ioc.test.bean;
 
 import lombok.Data;
 
 import java.util.List;
+
+/**
+ * @version 1.0
+ * @author： L.T.J
+ * @date： 2021-12-06
+ */
 
 @Data
 public class BeanDefinition {

@@ -1,11 +1,12 @@
-package core;
+package com.ioc.test.core;
 
-import bean.BeanDefinition;
-import bean.ConstructorArg;
+
+import com.ioc.test.bean.BeanDefinition;
+import com.ioc.test.bean.ConstructorArg;
+import com.ioc.test.utils.BeanUtils;
+import com.ioc.test.utils.ClassUtils;
+import com.ioc.test.utils.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import utils.BeanUtils;
-import utils.ClassUtils;
-import utils.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -58,6 +59,7 @@ public class BeanFactoryImpl implements BeanFactory{
             for (ConstructorArg constructorArg : constructorArgs) {
                 objects.add(getBean(constructorArg.getRef()));
             }
+            //带构造函数的代理
             return BeanUtils.instanceByCglib(clz,clz.getConstructor(),objects.toArray());
         }else {
             return BeanUtils.instanceByCglib(clz,null,null);

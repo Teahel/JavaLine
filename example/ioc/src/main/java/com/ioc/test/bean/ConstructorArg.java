@@ -1,4 +1,4 @@
-package bean;
+package com.ioc.test.bean;
 
 import lombok.Data;
 

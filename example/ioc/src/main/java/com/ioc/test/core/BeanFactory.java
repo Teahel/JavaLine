@@ -1,4 +1,4 @@
-package core;
+package com.ioc.test.core;
 
 /**
  * bean 工厂接口
