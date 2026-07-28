@@ -1,0 +1,50 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class TrinoQueryService {
+
+    private final JdbcTemplate trinoJdbcTemplate;
+
+    public TrinoQueryService(
+            @Qualifier("trinoJdbcTemplate")
+            JdbcTemplate trinoJdbcTemplate) {
+
+        this.trinoJdbcTemplate = trinoJdbcTemplate;
+    }
+
+    /**
+     * 查询所有数据源
+     */
+    public List<String> getCatalogs() {
+        return trinoJdbcTemplate.queryForList(
+                "SHOW CATALOGS",
+                String.class
+        );
+    }
+
+    /**
+     * 查询设备
+     */
+    public List<Map<String, Object>> getDevices() {
+        String sql = """
+                SELECT
+                    id,
+                    dev_code,
+                    customer,
+                    product_type,
+                    production_time
+                FROM mysql200.bd_archives_center.device_info
+                ORDER BY id DESC
+                LIMIT 100
+                """;
+
+        return trinoJdbcTemplate.queryForList(sql);
+    }
+}
