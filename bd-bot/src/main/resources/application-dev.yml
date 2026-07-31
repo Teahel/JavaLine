@@ -1,0 +1,31 @@
+
+
+logging:
+  config: classpath:resource/logback-dev.xml
+
+
+spring:
+  shardingsphere:
+    mode:
+      type: Standalone
+      repository:
+        type: JDBC
+    datasource:
+      names: ds_0
+      ds_0:
+        type: com.zaxxer.hikari.HikariDataSource
+        pool-name: OperaMaintenanceHikariPool
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.168.1.202:3306/new_bot?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: ENvp11YADZYvNIBS
+        minimum-idle: 5
+        maximum-pool-size: 20
+        connection-timeout: 30000
+        idle-timeout: 600000
+        max-lifetime: 1800000
+        validation-timeout: 5000
+        connection-test-query: SELECT 1
+
+    props:
+      sql-show: true

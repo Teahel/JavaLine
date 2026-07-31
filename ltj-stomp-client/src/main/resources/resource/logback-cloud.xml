@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!--用来设置上下文名称，每个logger都关联到logger上下文，默认上下文名称为default。但可以使用设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。-->
+    <contextName>@project.artifactId@</contextName>
+
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="/home/logs/@project.artifactId@"/>
+    <!--文件保留时间-->
+    <property name="log.maxHistory" value="30"/>
+    <!--单个文件最大大小-->
+    <property name="log.maxFileSize" value="100MB"/>
+    <!--所有日志最多占有多大硬盘-->
+    <property name="log.totalSizeCap" value="20GB"/>
+    <!--日志的输出格式-->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level --- [%15.15(%thread)] %-40.40(%logger{40}) : %msg%n"/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-50.50logger{50}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- 控制台输出设置 -->
+    <!--输出到控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 对日志进行格式化 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.stomp" additivity="false" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <!-- 系统日志输出 -->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
+        所以我们使用下面的策略，可以避免输出 Error 的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--设置过滤级别-->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <!--日志文件路径和名称-->
+        <File>${LOG_HOME}/com.stomp-info.log</File>
+        <!--如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。-->
+        <append>true</append>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/com.stomp-info-%i.log</FileNamePattern>
+            <!--文件最大保存历史数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <!--所有日志最多占多大容量-->
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <!--每个文件的大小限制-->
+            <MaxFileSize>${log.maxFileSize}</MaxFileSize>
+            <!--重启清理日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大时会被压缩和切割 -->
+                <maxFileSize>${log.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.stomp" additivity="false" level="INFO">
+        <appender-ref ref="INFO"/>
+    </logger>
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--低于ERROR级别的日志（debug,info）将被拒绝，等于或者高于ERROR的级别将相应NEUTRAL-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <!--日志文件路径和名称-->
+        <File>${LOG_HOME}/com.stomp-warn.log</File>
+        <!--是否追加到文件末尾,默认为true-->
+        <append>true</append>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/com.stomp-warn-%i.log</FileNamePattern>
+            <!--文件最大保存历史数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <!--所有日志最多占多大容量-->
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <!--每个文件的大小限制-->
+            <MaxFileSize>${log.maxFileSize}</MaxFileSize>
+            <!--重启清理日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>${log.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.stomp" additivity="false" level="WARN">
+        <appender-ref ref="WARN"/>
+    </logger>
+    <!-- 错误日志输出 -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--低于ERROR级别的日志（debug,info）将被拒绝，等于或者高于ERROR的级别将相应NEUTRAL-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <!--日志文件路径和名称-->
+        <File>${LOG_HOME}/com.stomp-err.log</File>
+        <!--是否追加到文件末尾,默认为true-->
+        <append>true</append>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/com.stomp-err-%i.log</FileNamePattern>
+            <!--文件最大保存历史数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <!--所有日志最多占多大容量-->
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <!--每个文件的大小限制-->
+            <MaxFileSize>${log.maxFileSize}</MaxFileSize>
+            <!--重启清理日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>${log.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.stomp" additivity="false" level="ERROR">
+        <appender-ref ref="ERROR"/>
+    </logger>
+    <!-- debug日志输出 -->
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--设置过滤级别-->
+            <level>DEBUG</level>
+            <!--用于配置符合过滤条件的操作-->
+            <onMatch>ACCEPT</onMatch>
+            <!--用于配置不符合过滤条件的操作-->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志文件路径和名称-->
+        <File>${LOG_HOME}/com.stomp-deb.log</File>
+        <!--是否追加到文件末尾,默认为true-->
+        <append>true</append>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/com.stomp-deb-%i.log</FileNamePattern>
+            <!--文件最大保存历史数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <!--所有日志最多占多大容量-->
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <!--每个文件的大小限制-->
+            <MaxFileSize>${log.maxFileSize}</MaxFileSize>
+            <!--重启清理日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>${log.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.stomp" additivity="false" level="DEBUG">
+        <appender-ref ref="DEBUG"/>
+    </logger>
+    <!-- 异步输出INFO -->
+    <appender name="ASYNC_INFO_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 默认情况下，当阻塞队列的剩余容量为20％时，它将丢弃TRACE，DEBUG和INFO级别的事件，仅保留WARN和ERROR级别的事件。要保留所有事件，请将discardingThreshold设置为0。 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!--如果设置了neverBlock=true则写日志队列时候会调用ArrayBlockingQueue对的offer方法而不是put,而offer是非阻塞的-->
+        <neverBlock>true</neverBlock>
+        <!-- 添加附加的appender,使用前面定义的name,最多只能添加一个 -->
+        <appender-ref ref="INFO"/>
+    </appender>
+    <!-- 异步输出DEBUG -->
+    <appender name="ASYNC_DEBUG_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 默认情况下，当阻塞队列的剩余容量为20％时，它将丢弃TRACE，DEBUG和INFO级别的事件，仅保留WARN和ERROR级别的事件。要保留所有事件，请将discardingThreshold设置为0。 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!--如果设置了neverBlock=true则写日志队列时候会调用ArrayBlockingQueue对的offer方法而不是put,而offer是非阻塞的-->
+        <neverBlock>true</neverBlock>
+        <!-- 添加附加的appender,使用前面定义的name,最多只能添加一个 -->
+        <appender-ref ref="DEBUG"/>
+    </appender>
+    <!-- 异步输出WARN -->
+    <appender name="ASYNC_WARN_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 默认情况下，当阻塞队列的剩余容量为20％时，它将丢弃TRACE，DEBUG和INFO级别的事件，仅保留WARN和ERROR级别的事件。要保留所有事件，请将discardingThreshold设置为0。 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!--如果设置了neverBlock=true则写日志队列时候会调用ArrayBlockingQueue对的offer方法而不是put,而offer是非阻塞的-->
+        <neverBlock>true</neverBlock>
+        <!-- 添加附加的appender,使用前面定义的name,最多只能添加一个 -->
+        <appender-ref ref="WARN"/>
+    </appender>
+    <!-- 异步输出ERROR -->
+    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 默认情况下，当阻塞队列的剩余容量为20％时，它将丢弃TRACE，DEBUG和INFO级别的事件，仅保留WARN和ERROR级别的事件。要保留所有事件，请将discardingThreshold设置为0。 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!--如果设置了neverBlock=true则写日志队列时候会调用ArrayBlockingQueue对的offer方法而不是put,而offer是非阻塞的-->
+        <neverBlock>true</neverBlock>
+        <!-- 添加附加的appender,使用前面定义的name,最多只能添加一个 -->
+        <appender-ref ref="ERROR"/>
+    </appender>
+
+    <!-- springProfile多环境日志输出，根据不同环境（local:本地环境，prod:生产环境，test:测试环境，dev:开发环境）来定义不同的日志输出，读取spring.profiles.active的值-->
+    <springProfile name="local,dev,test">
+        <root>
+            <level value="DEBUG"/>
+            <appender-ref ref="ASYNC_DEBUG_FILE"/>
+        </root>
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ASYNC_INFO_FILE"/>
+            <appender-ref ref="ASYNC_WARN_FILE"/>
+            <appender-ref ref="ASYNC_ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="!(local,dev,test)">
+        <root>
+            <level value="DEBUG"/>
+            <appender-ref ref="ASYNC_DEBUG_FILE"/>
+        </root>
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ASYNC_INFO_FILE"/>
+            <appender-ref ref="ASYNC_WARN_FILE"/>
+            <appender-ref ref="ASYNC_ERROR_FILE"/>
+        </root>
+    </springProfile>
+</configuration>

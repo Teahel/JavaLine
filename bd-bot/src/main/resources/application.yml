@@ -1,0 +1,36 @@
+spring:
+  profiles:
+    active: '@profiles.active@'
+
+#tomcat
+server:
+  address: 0.0.0.0
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 9084
+  servlet:
+    context-path: /bd-bot
+
+app:
+  cors:
+    # 开发环境允许 localhost / 127.0.0.1 任意端口。
+    # 生产环境建议改成实际域名，例如：https://example.com
+    allowed-origin-patterns: http://localhost:*,http://127.0.0.1:*,http://10.168.1.14:*,http://10.168.1.200:*
+    allow-credentials: true
+
+#mybatis-plus 相关配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.example.**.entity
+  global-config:
+    db-config:
+      logic-delete-field: deleted # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  configuration:
+    ## 自动驼峰命名规则映射
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
