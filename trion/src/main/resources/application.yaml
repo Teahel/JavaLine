@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: trion
+
+
+server:
+  port: 8080
+
+trino:
+  url: jdbc:trino://10.168.1.200:9086
+  username: admin
+  password:
