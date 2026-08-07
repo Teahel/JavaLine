@@ -50,15 +50,26 @@ public class TrinoQueryServiceImpl implements TrinoQueryService {
             int pageSize) {
 
         String selectClause = """
-                SELECT pd.dev_num, pd.project_code, pd.dev_name,
+                SELECT pd.dev_num,
+                       pd.project_code,
+                       pd.dev_name,
                        pd.create_time AS installation_time,
-                       pd.create_by, pd.modify_by, pd.modify_time,
-                       dii.image_url, dii.longitude, dii.latitude,
-                       dii.install_address, dii.upload_time,
-                       pi.project_name, bsi.name AS system_name,
-                       pi2.produce_code, dt.code AS shipping_code,
-                       pi2.create_time AS produce_time, dt.customer,
-                       dt.create_time AS shipping_time, dt.remark,
+                       pd.create_by, 
+                       pd.modify_by, 
+                       pd.modify_time,
+                       dii.image_url,
+                       dii.longitude,
+                       dii.latitude,
+                       dii.install_address,
+                       dii.upload_time,
+                       pi.project_name, 
+                       bsi.name AS system_name,
+                       pi2.produce_code, 
+                       dt.code AS shipping_code,
+                       pi2.create_time AS produce_time,
+                       dt.customer,
+                       dt.create_time AS shipping_time, 
+                       dt.remark,
                        COALESCE(nc.last_report_time, nm.last_report_time) AS last_report_time
                 """;
         String fromClause = """

@@ -1,8 +1,12 @@
 spring:
-  profiles:
-    active: '@profiles.active@'
   application:
     name: trion
+
+  datasource:
+    url: jdbc:trino://127.0.0.1:9081
+    username: admin
+    password: ""
+    driver-class-name: io.trino.jdbc.TrinoDriver
 
 server:
   port: 9087
