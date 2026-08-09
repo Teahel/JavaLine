@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: trion
+
+  datasource:
+    url: jdbc:trino://127.0.0.1:9081
+    username: admin
+    password: ""
+    driver-class-name: io.trino.jdbc.TrinoDriver
+
+server:
+  port: 9087
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+

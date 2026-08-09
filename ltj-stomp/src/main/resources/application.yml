@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: '@profileActive@'
+
+server:
+  # WebSocket相关配置
+  websocket:
+    # 可选：配置WebSocket消息大小限制
+    max-text-message-size: 8192
+    max-binary-message-size: 8192
+    max-session-idle-timeout: 600000
+  servlet:
+    context-path: /ltj-stomp
+  port: 8080
+

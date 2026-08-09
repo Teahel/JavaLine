@@ -1,0 +1,27 @@
+
+my-frontend 文件夹下放Docekerfile、nginx.conf、dist\
+
+
+
+docker build -t my-frontend:1.0 .
+
+docker run -d \
+  --name my-frontend \
+  --restart unless-stopped \
+  -p 9084:80 \
+  my-frontend:1.0
+
+
+更换：
+cd /opt/my-frontend
+
+docker rm -f my-frontend
+
+docker build -t my-frontend:1.1 .
+
+docker run -d \
+  --name my-frontend \
+  --restart unless-stopped \
+  --add-host=host.docker.internal:host-gateway \
+  -p 9084:80 \
+  my-frontend:1.1

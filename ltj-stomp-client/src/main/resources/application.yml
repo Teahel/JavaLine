@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: '@profileActive@'
+
+server:
+  servlet:
+    context-path: /ltj-stomp-client
+  port: 8081
+
