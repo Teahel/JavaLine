@@ -3,13 +3,13 @@ spring:
     name: trion
 
   datasource:
-    url: jdbc:trino://127.0.0.1:9081
+    url: jdbc:trino://127.0.0.1:8080
     username: admin
     password: ""
     driver-class-name: io.trino.jdbc.TrinoDriver
 
 server:
-  port: 9087
+  port: 9081
 
 springdoc:
   api-docs:
