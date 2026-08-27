@@ -73,29 +73,29 @@ public class TrinoQueryServiceImpl implements TrinoQueryService {
                        COALESCE(nc.last_report_time, nm.last_report_time) AS last_report_time
                 """;
         String fromClause = """
-                FROM mysql201.bd_archives_center.project_device pd
-                LEFT JOIN mysql201.bd_archives_center.device_image_info dii
+                FROM bactrino.bd_archives_center.project_device pd
+                LEFT JOIN bactrino.bd_archives_center.device_image_info dii
                        ON pd.dev_num = dii.dev_no
-                LEFT JOIN mysql201.bd_archives_center.project_info pi
+                LEFT JOIN bactrino.bd_archives_center.project_info pi
                        ON pi.project_code = pd.project_code
-                LEFT JOIN mysql201.bd_archives_center.device_business_system_assoc dbsa
+                LEFT JOIN bactrino.bd_archives_center.device_business_system_assoc dbsa
                        ON pd.dev_num = dbsa.dev_num
-                JOIN mysql201.bd_archives_center.business_system_info bsi
+                LEFT JOIN bactrino.bd_archives_center.business_system_info bsi
                      ON bsi.id = dbsa.business_system_id
-                JOIN mysql200.platform_producer.device_info di
+                LEFT JOIN pptrino.platform_producer.device_info di
                      ON di.dev_code = pd.dev_num
-                JOIN mysql200.platform_producer.produce_info pi2
+                LEFT JOIN pptrino.platform_producer.produce_info pi2
                      ON di.produce_code = pi2.produce_code
-                JOIN mysql200.platform_producer.delivery_task_device dtd
+                LEFT JOIN pptrino.platform_producer.delivery_task_device dtd
                      ON di.dev_code = dtd.dev_code
-                JOIN mysql200.platform_producer.delivery_task dt
+                LEFT JOIN pptrino.platform_producer.delivery_task dt
                      ON dtd.task_code = dt.code
-                JOIN mysql202.machine_cloud.niot_project np
+                LEFT JOIN mctrino.machine_cloud.niot_project np
                      ON np.project_code = pd.project_code
-                LEFT JOIN mysql202.machine_cloud.niot_concentrator nc
+                LEFT JOIN mctrino.machine_cloud.niot_concentrator nc
                        ON nc.project_id = np.record_id
                       AND nc.concentrator_num = di.dev_code
-                LEFT JOIN mysql202.machine_cloud.niot_measure nm
+                LEFT JOIN mctrino.machine_cloud.niot_measure nm
                        ON nm.project_id = np.record_id
                       AND nm.measure_num = di.dev_code
                 """;
