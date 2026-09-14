@@ -22,16 +22,16 @@ public class DeviceQueryRequestDto {
     @Schema(description = "设备名称")
     private String devName;
 
-    @Schema(description = "系统名称")
+    @Schema(description = "系统名称，匹配任一所属系统；返回值合并展示全部所属系统")
     private String systemName;
 
     @Schema(description = "生产编号")
     private String produceCode;
 
-    @Schema(description = "发货单号")
+    @Schema(description = "最新一条发货记录的发货单号")
     private String taskCode;
 
-    @Schema(description = "客户名称")
+    @Schema(description = "最新一条发货记录的客户名称")
     private String customer;
 
     @Schema(description = "生产开始时间，格式：yyyy-MM-dd HH:mm:ss", type = "string")
@@ -42,11 +42,11 @@ public class DeviceQueryRequestDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createEndTime;
 
-    @Schema(description = "发货开始时间，格式：yyyy-MM-dd HH:mm:ss", type = "string")
+    @Schema(description = "最新一条发货记录的开始时间（包含），格式：yyyy-MM-dd HH:mm:ss", type = "string")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deliveryStartTime;
 
-    @Schema(description = "发货结束时间，格式：yyyy-MM-dd HH:mm:ss", type = "string")
+    @Schema(description = "最新一条发货记录的结束时间（不包含），格式：yyyy-MM-dd HH:mm:ss", type = "string")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deliveryEndTime;
 
