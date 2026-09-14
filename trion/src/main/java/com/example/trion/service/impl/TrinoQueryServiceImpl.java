@@ -112,7 +112,8 @@ public class TrinoQueryServiceImpl implements TrinoQueryService {
         // 没传生产条件时，COUNT 和分页就不必访问生产表。
         StringBuilder productionConditions = new StringBuilder();
         List<Object> productionParams = new ArrayList<>();
-        addEqualCondition(productionConditions, productionParams, "pi2.produce_code", produceCode);
+        // 生产单号属于 device_info；即使 produce_info 关联数据缺失，也应能按生产单号查到设备。
+        addEqualCondition(productionConditions, productionParams, "di.produce_code", produceCode);
         addTimeConditions(productionConditions, productionParams, "di.create_time",
                 produceStartTime, produceEndTime);
         if (!productionConditions.isEmpty()) {
@@ -243,16 +244,35 @@ public class TrinoQueryServiceImpl implements TrinoQueryService {
                     FROM bactrino.bd_archives_center.project_info
                     WHERE project_code IN (SELECT project_code FROM page_keys)
                     GROUP BY project_code
+                ), device_status AS (
+                    -- dev_status_time 一台设备可能有多条状态历史，先按更新时间取最新一条，避免联表后重复设备。
+                    SELECT dev_id, dev_status,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY dev_id
+                               ORDER BY modified DESC NULLS LAST, id DESC
+                           ) AS rn
+                    FROM pptrino.platform_producer.dev_status_time
+                    WHERE dev_id IN (
+                        SELECT di.id
+                        FROM pptrino.platform_producer.device_info di
+                        WHERE di.dev_code IN (SELECT dev_num FROM page_keys)
+                    )
                 ), production AS (
-                    SELECT di.dev_code, pi2.produce_code, di.create_time AS produce_time,
+                    -- produce_code 直接取设备表，避免生产单主表缺失时被 LEFT JOIN 置空。
+                    -- 产品型号以 code_type 为准，通过生产单的 product_code 关联获取。
+                    SELECT di.dev_code, di.produce_code, pi2.product_code, ct.product_type,
+                           ds.dev_status, di.create_time AS produce_time,
                            ROW_NUMBER() OVER (
                                PARTITION BY di.dev_code
                                ORDER BY di.create_time DESC NULLS LAST,
-                                        pi2.produce_code DESC NULLS LAST
+                                        di.produce_code DESC NULLS LAST
                            ) AS rn
                     FROM pptrino.platform_producer.device_info di
                     LEFT JOIN pptrino.platform_producer.produce_info pi2
                       ON pi2.produce_code = di.produce_code
+                    LEFT JOIN pptrino.platform_producer.code_type ct
+                      ON ct.product_code = pi2.product_code
+                    LEFT JOIN device_status ds ON ds.dev_id = di.id AND ds.rn = 1
                     WHERE di.dev_code IN (SELECT dev_num FROM page_keys)
                 """ + productionConditions + "), shipping AS ("
                 + rankedShipping(" WHERE dtd.dev_code IN (SELECT dev_num FROM page_keys)") + "),"
@@ -275,7 +295,8 @@ public class TrinoQueryServiceImpl implements TrinoQueryService {
                     GROUP BY np.project_code, nm.measure_num
                 )
                 SELECT p.row_index, i.image_url, i.longitude, i.latitude, i.install_address, i.upload_time,
-                       pi.project_name, s.system_name, pr.produce_code, pr.produce_time,
+                       pi.project_name, s.system_name, pr.produce_code, pr.product_code, pr.product_type,
+                       pr.dev_status, pr.produce_time,
                        sh.code AS shipping_code, sh.customer, sh.create_time AS shipping_time, sh.remark,
                        COALESCE(nc.last_report_time, nm.last_report_time) AS last_report_time
                 FROM page_keys p

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: test-tdengine
+
+#tomcat
+server:
+  address: 0.0.0.0
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 9085
+  servlet:
+    context-path: /test-tdengine

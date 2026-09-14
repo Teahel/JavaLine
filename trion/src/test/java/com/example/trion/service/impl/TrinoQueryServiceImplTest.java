@@ -53,8 +53,10 @@ public class TrinoQueryServiceImplTest {
                         + "latitude DOUBLE, install_address VARCHAR, upload_time TIMESTAMP)",
                 "bd_archives_center.device_business_system_assoc(dev_num VARCHAR, business_system_id INT)",
                 "bd_archives_center.business_system_info(id INT, name VARCHAR)",
-                "platform_producer.device_info(dev_code VARCHAR, produce_code VARCHAR, create_time TIMESTAMP)",
-                "platform_producer.produce_info(produce_code VARCHAR, create_time TIMESTAMP)",
+                "platform_producer.device_info(id BIGINT, dev_code VARCHAR, produce_code VARCHAR, create_time TIMESTAMP)",
+                "platform_producer.produce_info(produce_code VARCHAR, product_code VARCHAR, create_time TIMESTAMP)",
+                "platform_producer.code_type(product_code VARCHAR, product_type VARCHAR)",
+                "platform_producer.dev_status_time(id BIGINT, dev_id BIGINT, dev_status INT, modified TIMESTAMP)",
                 "platform_producer.delivery_task_device(dev_code VARCHAR, task_code VARCHAR)",
                 "platform_producer.delivery_task(code VARCHAR, customer VARCHAR, create_time TIMESTAMP, remark VARCHAR)",
                 "machine_cloud.niot_project(project_code VARCHAR, record_id INT)",
@@ -80,12 +82,19 @@ public class TrinoQueryServiceImplTest {
         fixture.update("INSERT INTO bd_archives_center.device_business_system_assoc VALUES ('D1', 2), ('D1', 1), ('D1', 2)");
         fixture.update("""
                 INSERT INTO platform_producer.device_info VALUES
-                ('D1', 'PR1', TIMESTAMP '2025-01-01 00:00:00'),
-                ('D1', 'PR2', TIMESTAMP '2025-02-01 00:00:00')
+                (1, 'D1', 'PR1', TIMESTAMP '2025-01-01 00:00:00'),
+                (2, 'D1', 'PR2', TIMESTAMP '2025-02-01 00:00:00')
                 """);
         fixture.update("""
                 INSERT INTO platform_producer.produce_info VALUES
-                ('PR1', TIMESTAMP '2030-01-01 00:00:00'), ('PR2', TIMESTAMP '2020-01-01 00:00:00')
+                ('PR1', 'PC1', TIMESTAMP '2030-01-01 00:00:00'),
+                ('PR2', 'PC2', TIMESTAMP '2020-01-01 00:00:00')
+                """);
+        fixture.update("INSERT INTO platform_producer.code_type VALUES ('PC1', 'Type 1'), ('PC2', 'Type 2')");
+        fixture.update("""
+                INSERT INTO platform_producer.dev_status_time VALUES
+                (1, 2, 2, TIMESTAMP '2025-01-10 00:00:00'),
+                (2, 2, 3, TIMESTAMP '2025-02-10 00:00:00')
                 """);
         fixture.update("INSERT INTO platform_producer.delivery_task_device VALUES ('D1', 'S1'), ('D1', 'S2'), ('D1', 'S2')");
         fixture.update("""
@@ -114,7 +123,10 @@ public class TrinoQueryServiceImplTest {
                 .containsEntry("system_name", "A, B")
                 .containsEntry("shipping_code", "S2")
                 .containsEntry("customer", "Customer B")
-                .containsEntry("produce_code", "PR2");
+                .containsEntry("produce_code", "PR2")
+                .containsEntry("product_code", "PC2")
+                .containsEntry("product_type", "Type 2")
+                .containsEntry("dev_status", 3);
         assertThat(device.get("produce_time").toString()).isEqualTo("2025-02-01 00:00:00.0");
         assertThat(device.get("last_report_time").toString()).isEqualTo("2026-03-02 00:00:00.0");
         assertThat(device).doesNotContainKey("row_index");
